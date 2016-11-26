@@ -23,7 +23,7 @@ public class HeroDaoImp implements HeroDAO{
     public void createHero(Heroes hero, Users user) throws SQLException {
         if (connection != null) {
 
-            if (!userExist(user)) {
+            if (userExist(user)) {
                 Statement statement = connection.createStatement();
 
                 statement.executeUpdate("INSERT INTO heroes(" +
@@ -82,8 +82,8 @@ public class HeroDaoImp implements HeroDAO{
             statement.setString(1,user_name);
             ResultSet result = statement.executeQuery();
 
-            result.next();
-            if (!  result.wasNull()) {
+
+            if (result.next()) {
 
                 hero.setId(result.getInt("id"));
                 hero.setUser_id(result.getInt("user_id"));
@@ -111,7 +111,7 @@ public class HeroDaoImp implements HeroDAO{
     public void updateHero(Heroes hero) throws SQLException {
         if (connection != null) {
 
-            if (!  heroExist(hero)) {
+            if (heroExist(hero)) {
                 PreparedStatement upStatement = connection.prepareStatement("UPDATE heroes SET user_id = ?, dmg = ?, hp = ?, hero_type = ?, level = ? WHERE id = ?");
                 upStatement.setInt(1, hero.getUser_id());
                 upStatement.setInt(2, hero.getDamage());
@@ -175,8 +175,7 @@ public class HeroDaoImp implements HeroDAO{
 
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId());
-        result.next();
-        if(! result.wasNull()){
+        if(result.next()){
             result.close();;
             statement.close();
             return true;
@@ -192,8 +191,8 @@ public class HeroDaoImp implements HeroDAO{
     public boolean heroExist(Heroes hero) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery("SELECT id FROM heroes WHERE id = " + hero.getId());
-        result.next();
-        if(! result.wasNull()){
+
+        if(result.next()){
             result.close();;
             statement.close();
             return true;

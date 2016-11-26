@@ -9,13 +9,13 @@ import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
 
-public class NewAccaunt {
-    private static Logger loger = Logger.getLogger(NewAccaunt.class.getName());
+public class NewAccount {
+    private static Logger loger = Logger.getLogger(NewAccount.class.getName());
     private DBFactory db_access = new DBFactory();
     private UserDAO userDAO;
     private SecurityDAO securityDAO;
 
-    NewAccaunt(){
+    public NewAccount(){
         try {
             db_access.getConnection();
             userDAO = db_access.createUserDAO();
@@ -30,11 +30,8 @@ public class NewAccaunt {
         if(this.checkUniqName(user_name)) {
             Users new_user = new Users();
             new_user.setName(user_name);
-
             userDAO.createUser(new_user);
-
             new_user = userDAO.findUser(user_name);
-
             securityDAO.createSecurity(new_user,password);
 
             return 0;

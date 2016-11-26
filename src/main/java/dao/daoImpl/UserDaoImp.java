@@ -66,20 +66,23 @@ public class UserDaoImp implements UserDAO {
                 statement.setString(1,name);
                 ResultSet result = statement.executeQuery();
 
-                    result.next();
-                    if (!  result.wasNull()) {
 
-                        user.setId(result.getInt("id"));
-                        user.setName(result.getString("name"));
 
-                        result.close();
-                        statement.close();
-                        loger.info("User " +user.getName() + "successfully found");
-                    } else {
-                        result.close();
-                        statement.close();
-                        user = null;
-                    }
+
+                if (result.next()) {
+
+                    user.setId(result.getInt("id"));
+                    user.setName(result.getString("name"));
+
+                    result.close();
+                    statement.close();
+                    loger.info("User " +user.getName() + " successfully found");
+                } else {
+
+                    result.close();
+                    statement.close();
+                    user = null;
+                }
 
                 return user;
             } else {
@@ -92,7 +95,7 @@ public class UserDaoImp implements UserDAO {
     {
             if (connection != null) {
 
-                if (!  userExist(user)) {
+                if (userExist(user)) {
                     PreparedStatement upStatement = connection.prepareStatement("UPDATE users SET name = ? WHERE id = ?");
                     upStatement.setString(1, user.getName());
                     upStatement.setInt(2, user.getId());
@@ -148,7 +151,7 @@ public class UserDaoImp implements UserDAO {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId());
         result.next();
-        if(! result.wasNull()){
+        if(result.next()){
             result.close();;
             statement.close();
             return true;

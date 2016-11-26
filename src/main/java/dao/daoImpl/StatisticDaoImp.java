@@ -26,7 +26,7 @@ public class StatisticDaoImp implements StatisticDAO{
     public void createStatistic(Statistics statistics, Users user) throws SQLException {
         if (connection != null) {
 
-            if (!userExist(user)) {
+            if (userExist(user)) {
                 Statement statement = connection.createStatement();
 
                 statement.executeUpdate("INSERT INTO statistics(user_id," +
@@ -83,8 +83,8 @@ public class StatisticDaoImp implements StatisticDAO{
             statement.setString(1,user_name);
             ResultSet result = statement.executeQuery();
 
-            result.next();
-            if (!  result.wasNull()) {
+
+            if (result.next()) {
 
                 statistics.setId(result.getInt("id"));
                 statistics.setUser_id(result.getInt("user_id"));
@@ -109,7 +109,7 @@ public class StatisticDaoImp implements StatisticDAO{
     public void updateStatistic(Statistics statistics) throws SQLException{
         if (connection != null) {
 
-            if (!  statisticExist(statistics)) {
+            if (statisticExist(statistics)) {
                 PreparedStatement upStatement = connection.prepareStatement("UPDATE statistics SET user_id = ?, win = ?, defeat = ?, user_level = ?, WHERE id = ?");
                 upStatement.setInt(1, statistics.getUser_id());
                 upStatement.setInt(2, statistics.getWin());
@@ -169,8 +169,8 @@ public class StatisticDaoImp implements StatisticDAO{
 
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId());
-        result.next();
-        if(! result.wasNull()){
+
+        if(result.next()){
             result.close();;
             statement.close();
             return true;
@@ -186,8 +186,8 @@ public class StatisticDaoImp implements StatisticDAO{
 
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery("SELECT id FROM statistics WHERE id = " + statistic.getId());
-        result.next();
-        if(! result.wasNull()){
+
+        if(result.next()){
             result.close();;
             statement.close();
             return true;

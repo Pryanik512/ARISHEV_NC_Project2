@@ -23,13 +23,12 @@ public class SecurityDaoImp implements SecurityDAO {
 
         if (connection != null) {
 
-            if (!userExist(user)) {
+            if (userExist(user)) {
                 Statement statement = connection.createStatement();
                 String encoded = Base64                             // Encoding password through base-64
                         .getEncoder()
                         .encodeToString( password.getBytes( StandardCharsets.UTF_8 ) );
                 statement.executeUpdate("INSERT INTO security(user_id,password) values(" + user.getId() + ", '" + encoded + "')");
-
                 statement.close();
             }
             else
@@ -48,7 +47,7 @@ public class SecurityDaoImp implements SecurityDAO {
         if (connection != null) {
 
 
-            if (! userExist(user)) {
+            if (userExist(user)) {
                 Statement statement = connection.createStatement();
                 statement.executeUpdate("DELETE FROM security WHERE user_id = " + user.getId());
                 System.out.println("DELETE OK!!");
@@ -69,7 +68,7 @@ public class SecurityDaoImp implements SecurityDAO {
         if (connection != null) {
 
 
-            if (! userExist(user)) {
+            if (userExist(user)) {
                 Statement statement = connection.createStatement();
                 PreparedStatement p_Statement = connection.prepareStatement("SELECT password FROM security WHERE user_id = ?");
                 p_Statement.setInt(1,user.getId());
@@ -110,8 +109,8 @@ public class SecurityDaoImp implements SecurityDAO {
 
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId());
-        result.next();
-        if(! result.wasNull()){
+
+        if(result.next()){
             result.close();;
             statement.close();
             return true;

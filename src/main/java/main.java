@@ -17,10 +17,13 @@ public class main {
 
         try {
             psqlDB.getConnection();
-           // UserDAO users = psqlDB.createUserDAO();
-
-            Users user1 = new Users();
-            Security userSecur = new Security();
+            UserDAO users = psqlDB.createUserDAO();
+            if(users.findUser("King") == null){
+                System.out.println("All ok!1");
+            }
+            else System.out.println("All baaaaaaaaaaaaaaadddd!!!");
+          //  Users user1 = new Users();
+            //Security userSecur = new Security();
 
 
             psqlDB.closeConnection();

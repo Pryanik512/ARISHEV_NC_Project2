@@ -23,7 +23,7 @@ public class DBFactoryTest {
             String name = "";
             String pass = "";
 
-            dbFactory.getConnection(url,name,pass);
+            dbFactory.getConnection();
             throw new AssertionError();
 
     }
@@ -31,9 +31,7 @@ public class DBFactoryTest {
     public void test_get_connection_to_DB(){
         Connection connect = null;
         try {
-           connect = dbFactory.getConnection("jdbc:postgresql://127.0.0.1:5432/JavaGameDB",
-                                             "postgres",
-                                             "root");
+           connect = dbFactory.getConnection();
            if (connect == null){
                throw new AssertionError();
            }
@@ -47,9 +45,7 @@ public class DBFactoryTest {
     public void test_close_connection_to_DB() throws SQLException, ClassNotFoundException{
 
         try{
-            dbFactory.getConnection("jdbc:postgresql://127.0.0.1:5432/JavaGameDB",
-                    "postgres",
-                    "root");
+            dbFactory.getConnection();
             dbFactory.closeConnection();
         }catch(RuntimeException ex){
             throw new AssertionError(ex.getMessage());
