@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 public interface SecurityDAO {
 
+
     public void createSecurity(Users user, String password) throws SQLException;
     public void deleteSecurity(Users user) throws SQLException;
     public boolean checkSecurity(Users user, String password) throws SQLException;

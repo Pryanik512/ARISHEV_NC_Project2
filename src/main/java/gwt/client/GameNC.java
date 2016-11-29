@@ -1,6 +1,7 @@
 package gwt.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -45,7 +46,18 @@ public class GameNC implements EntryPoint {
                     }
                     @Override
                     public void onSuccess(Void result) {
-                      Window.alert("New user created!");
+
+
+                        String url = GWT.getHostPageBaseURL() + "NextPage.html";
+                        Window.Location.assign(url);
+
+                        HorizontalPanel np_hp = new HorizontalPanel();
+                        Label lb = new Label();
+
+                        np_hp.add(lb);
+                        RootPanel.get("NextPage").add(np_hp);
+                        //Window.alert("New user created!  " + url);
+
                     }
                 });
             }
