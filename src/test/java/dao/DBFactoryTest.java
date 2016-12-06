@@ -15,18 +15,7 @@ public class DBFactoryTest {
          dbFactory = new DBFactory();
     }
 
-    @Test(expected = SQLException.class)
-    public void test_fail_create_connection_to_DB() throws SQLException, ClassNotFoundException{
 
-
-            String url = "";
-            String name = "";
-            String pass = "";
-
-            dbFactory.getConnection();
-            throw new AssertionError();
-
-    }
     @Test
     public void test_get_connection_to_DB(){
         Connection connect = null;
@@ -52,9 +41,5 @@ public class DBFactoryTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
-    public void test_fail_close_connection_to_DB() throws SQLException, ClassNotFoundException{
-        dbFactory.closeConnection();
-        throw new AssertionError();
-    }
+
 }

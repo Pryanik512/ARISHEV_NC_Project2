@@ -1,7 +1,9 @@
 package dao.Entity;
 
 
-public class Statistics {
+import java.io.Serializable;
+
+public class Statistics implements Serializable {
      int id;
      int win;
      int user_id;

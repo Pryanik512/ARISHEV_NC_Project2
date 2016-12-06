@@ -3,14 +3,16 @@ package gwt.client;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.core.client.GWT;
+import dao.Entity.Users;
 
-import java.sql.SQLException;
+
 
 
 @RemoteServiceRelativePath("GameService")
 public interface GameService extends RemoteService {
 
     void addAccount(String name, String pass) throws GameNCException;
+    Users logIn(String name, String pass) throws GameNCException;
 
     /**
      * Utility/Convenience class.

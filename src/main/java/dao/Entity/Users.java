@@ -1,7 +1,11 @@
 package dao.Entity;
 
 
-public class Users {
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+import java.io.Serializable;
+
+public class Users implements Serializable{
 
      int id;
      String name;

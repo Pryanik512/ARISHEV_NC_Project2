@@ -1,7 +1,9 @@
 package dao.Entity;
 
 
-public class Heroes {
+import java.io.Serializable;
+
+public class Heroes implements Serializable {
      int id;
      int hero_type;
      int user_id;

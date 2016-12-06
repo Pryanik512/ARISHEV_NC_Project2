@@ -1,8 +1,10 @@
 package gwt.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import dao.Entity.Users;
 import gwt.client.GameNCException;
 import gwt.client.GameService;
+import model.LogIn;
 import model.NewAccount;
 import org.apache.log4j.Logger;
 
@@ -24,5 +26,21 @@ public class GameServiceImpl extends RemoteServiceServlet implements GameService
             throw new GameNCException("Problem with Data Base!");
         }
 
+    }
+
+    @Override
+    public Users logIn(String name, String pass) throws GameNCException{
+        try {
+            LogIn logInUser = new LogIn();
+            Users user = logInUser.makeLogIn(name, pass);
+            if(user == null){
+                throw new GameNCException("Wrong name or password!");
+            }
+            return user;
+
+        }catch (SQLException ex){
+            loger.error("Problem with Data Base: " + ex);
+            throw new GameNCException("Problem with Data Base!");
+        }
     }
 }

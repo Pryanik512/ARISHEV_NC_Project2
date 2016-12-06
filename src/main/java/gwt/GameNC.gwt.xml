@@ -2,9 +2,15 @@
         "http://gwtproject.org/doctype/2.7.0/gwt-module.dtd">
 <module>
 
+
     <inherits name='com.google.gwt.user.User'/>
 
-    <entry-point class='gwt.client.GameNC'/>
 
+    <entry-point class='gwt.client.GameNC'/>
     <servlet path="/GameService" class="gwt.server.GameServiceImpl"/>
+
+    <public path = 'dao.Entity'/>
+    <source path='client'/>
+
+
 </module>

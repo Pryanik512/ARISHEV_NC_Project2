@@ -1,7 +1,9 @@
 package dao.Entity;
 
 
-public class Security {
+import java.io.Serializable;
+
+public class Security implements Serializable {
 
     int id;
     int user_id;
