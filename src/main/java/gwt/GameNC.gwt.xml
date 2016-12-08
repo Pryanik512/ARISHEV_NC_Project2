@@ -9,7 +9,7 @@
     <entry-point class='gwt.client.GameNC'/>
     <servlet path="/GameService" class="gwt.server.GameServiceImpl"/>
 
-    <public path = 'dao.Entity'/>
+    <source path = 'dao.Entity'/>
     <source path='client'/>
 
 
