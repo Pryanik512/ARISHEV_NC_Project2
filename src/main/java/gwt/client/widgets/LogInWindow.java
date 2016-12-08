@@ -5,7 +5,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import dao.Entity.Users;
+
+import gwt.client.GWTEntity.UsersGWT;
 import gwt.client.GameNCException;
 import gwt.client.GameService;
 
@@ -36,7 +37,7 @@ public class LogInWindow extends Composite {
             public void onClick(ClickEvent clickEvent) {
 
 
-                GameService.App.getInstance().logIn(un_text.getText(), pass_text.getText(), new AsyncCallback<Users>() {
+                GameService.App.getInstance().logIn(un_text.getText(), pass_text.getText(), new AsyncCallback<UsersGWT>() {
                     @Override
                     public void onFailure(Throwable throwable) {
 
@@ -45,8 +46,10 @@ public class LogInWindow extends Composite {
                         }
                     }
                     @Override
-                    public void onSuccess(Users result) {
+                    public void onSuccess(UsersGWT result) {
 
+                        RootPanel.get("NewAccPage").clear();
+                        RootPanel.get("NewAccPage").add(new MainMenuWindow(result));
                     }
                 });
             }

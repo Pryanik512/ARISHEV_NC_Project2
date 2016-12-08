@@ -32,7 +32,6 @@ public class LogIn {
                return exist_user;
            }
         }
-
             return null;
 
     }

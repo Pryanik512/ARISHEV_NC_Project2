@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import gwt.client.GWTEntity.UsersGWT;
 import gwt.client.GameNCException;
 import gwt.client.GameService;
 
@@ -35,9 +36,11 @@ public class NewAccountWindow extends Composite {
 
         panelToCreate.add(createAcc);
 
+
+
         RootPanel.get("NewAccPage").add(panelToCreate);
 
-
+        initWidget(panelToCreate);
 
         createAcc.addClickHandler(new ClickHandler() {
 
@@ -49,7 +52,7 @@ public class NewAccountWindow extends Composite {
 
                 if(userName.matches("^[0-9A-Z_-]{3,16}$")) {
                     if (userPass.matches("^.{6,}$") && userPass.compareTo(repUserPass)==0) {
-                        GameService.App.getInstance().addAccount(userName, userPass, new AsyncCallback<Void>() {
+                        GameService.App.getInstance().addAccount(userName, userPass, new AsyncCallback<UsersGWT>() {
                             @Override
                             public void onFailure(Throwable throwable) {
                                 if (throwable instanceof GameNCException) {
@@ -58,8 +61,10 @@ public class NewAccountWindow extends Composite {
                             }
 
                             @Override
-                            public void onSuccess(Void result) {
+                            public void onSuccess(UsersGWT result) {
 
+                                RootPanel.get("NewAccPage").clear();
+                                RootPanel.get("NewAccPage").add(new MainMenuWindow(result));
                             }
                         });
                     }
@@ -75,6 +80,8 @@ public class NewAccountWindow extends Composite {
                 }
             }
         });
+
+
     }
 
 }
