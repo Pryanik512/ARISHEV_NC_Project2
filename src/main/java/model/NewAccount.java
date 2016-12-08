@@ -25,7 +25,7 @@ public class NewAccount {
 
     }
 
-    public int add(String user_name, String password) throws SQLException{
+    public Users add(String user_name, String password) throws SQLException{
 
         if(this.checkUniqName(user_name)) {
             Users new_user = new Users();
@@ -34,10 +34,10 @@ public class NewAccount {
             new_user = userDAO.findUser(user_name);
             securityDAO.createSecurity(new_user,password);
 
-            return 0;
+            return new_user;
         }
         else
-            return -1;
+            return null;
     }
 
     private boolean checkUniqName(String name) throws SQLException{
