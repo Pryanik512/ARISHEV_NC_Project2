@@ -11,7 +11,7 @@ public interface HeroDAO {
 
     public void createHero(Heroes hero, Users user)throws SQLException;
     public void deleteHero(Heroes hero)throws SQLException;
-    public Heroes findHero(String user_name)throws SQLException;
+    public Heroes findHero(String user_name, int hero_type)throws SQLException;
     public void updateHero(Heroes hero)throws SQLException;
     public Collection<Heroes> selectAllHeroes()throws SQLException;
 

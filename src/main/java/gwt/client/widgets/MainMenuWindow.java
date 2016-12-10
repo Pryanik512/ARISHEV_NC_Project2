@@ -3,8 +3,12 @@ package gwt.client.widgets;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import gwt.client.GWTEntity.EntityForBattle;
 import gwt.client.GWTEntity.UsersGWT;
+import gwt.client.GameNCException;
+import gwt.client.GameService;
 
 public class MainMenuWindow extends Composite {
 
@@ -29,7 +33,11 @@ public class MainMenuWindow extends Composite {
         startBattle_btn.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.alert("Let the battle begin!");
+
+                RootPanel.get("NewAccPage").clear();
+                RootPanel.get("NewAccPage").add(new ChoiceHeroWindow(correctUser));
+
+
             }
         });
 
@@ -40,4 +48,6 @@ public class MainMenuWindow extends Composite {
             }
         });
     }
+
+
 }

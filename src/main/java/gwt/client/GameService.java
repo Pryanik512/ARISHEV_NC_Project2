@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.core.client.GWT;
 
+import gwt.client.GWTEntity.EntityForBattle;
 import gwt.client.GWTEntity.UsersGWT;
 
 
@@ -12,6 +13,7 @@ public interface GameService extends RemoteService {
 
     UsersGWT addAccount(String name, String pass) throws GameNCException;
     UsersGWT logIn(String name, String pass) throws GameNCException;
+    EntityForBattle getHero(UsersGWT usersGWT, int hero_type) throws GameNCException;
 
     /**
      * Utility/Convenience class.

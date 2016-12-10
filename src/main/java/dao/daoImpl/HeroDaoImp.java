@@ -74,12 +74,13 @@ public class HeroDaoImp implements HeroDAO{
     }
 
     @Override
-    public Heroes findHero(String user_name) throws SQLException {
+    public Heroes findHero(String user_name, int hero_type) throws SQLException {
         if (connection != null) {
             Heroes hero = new Heroes();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM heroes WHERE user_id = (SELECT id FROM users WHERE name = ?)");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM heroes WHERE user_id = (SELECT id FROM users WHERE name = ? AND hero_type = ?)");
             statement.setString(1,user_name);
+            statement.setInt(2,hero_type);
             ResultSet result = statement.executeQuery();
 
 
@@ -98,7 +99,7 @@ public class HeroDaoImp implements HeroDAO{
             } else {
                 result.close();
                 statement.close();
-                throw new RuntimeException("Heroes for that user does not exist!");
+                hero = null;
             }
 
             return hero;
@@ -118,7 +119,7 @@ public class HeroDaoImp implements HeroDAO{
                 upStatement.setInt(3, hero.getHp());
                 upStatement.setInt(4, hero.getHero_type());
                 upStatement.setInt(5, hero.getLevel());
-                upStatement.setInt(5, hero.getId());
+                upStatement.setInt(6, hero.getId());
 
 
                 upStatement.executeUpdate();

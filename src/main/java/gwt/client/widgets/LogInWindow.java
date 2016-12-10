@@ -37,7 +37,7 @@ public class LogInWindow extends Composite {
             public void onClick(ClickEvent clickEvent) {
 
 
-                GameService.App.getInstance().logIn(un_text.getText(), pass_text.getText(), new AsyncCallback<UsersGWT>() {
+                GameService.App.getInstance().logIn(un_text.getText().toUpperCase(), pass_text.getText().toUpperCase(), new AsyncCallback<UsersGWT>() {
                     @Override
                     public void onFailure(Throwable throwable) {
 
