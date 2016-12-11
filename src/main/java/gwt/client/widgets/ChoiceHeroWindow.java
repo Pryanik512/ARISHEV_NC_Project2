@@ -15,28 +15,43 @@ import gwt.client.GameService;
 
 public class ChoiceHeroWindow extends Composite{
 
-    Button f_hero = new Button("Hero 1");
-    Button s_hero = new Button("Hero 2");
-    Button t_hero = new Button("Hero 3");
+    Button warrBtn = new Button("Warrior");
+    Button barbBtn = new Button("Barbarian");
+    Button asBtn = new Button("Assassin");
     HorizontalPanel choicePanel = new HorizontalPanel();
 
     public ChoiceHeroWindow(UsersGWT usersGWT){
 
-        choicePanel.add(f_hero);
-        choicePanel.add(s_hero);
-        choicePanel.add(t_hero);
+        choicePanel.add(warrBtn);
+        choicePanel.add(barbBtn);
+        choicePanel.add(asBtn);
 
         RootPanel.get("NewAccPage").add(choicePanel);
 
         initWidget(choicePanel);
 
-        f_hero.addClickHandler(new ClickHandler() {
+        warrBtn.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 callGetHero(usersGWT, 1);
             }
         });
+
+        barbBtn.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                callGetHero(usersGWT, 2);
+            }
+        });
+
+        asBtn.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                callGetHero(usersGWT, 3);
+            }
+        });
     }
+
     private static void callGetHero(UsersGWT correctUser,int hero_type){
 
         GameService.App.getInstance().getHero(correctUser, hero_type, new AsyncCallback<EntityForBattle>() {

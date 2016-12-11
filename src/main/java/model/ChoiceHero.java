@@ -5,8 +5,8 @@ import dao.Entity.Heroes;
 import dao.Entity.Users;
 import dao.HeroDAO;
 import dao.UserDAO;
-import model.heroes.HeroOne;
-import model.heroes.IDefaultHeroes;
+import model.heroes.NewHero;
+
 import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
@@ -31,19 +31,16 @@ public class ChoiceHero {
 
               int idHero;
 
-              if(hero_type == 1){
-                     heroForUser = heroDAO.findHero(currentUser.getName(), 1);
 
-                     if(heroForUser.getHp() == 0){
-                            idHero = heroForUser.getId();
+              heroForUser = heroDAO.findHero(currentUser.getName(), hero_type);
 
-                            IDefaultHeroes newHeroOne = new HeroOne();
-                            heroForUser = newHeroOne.getHero(currentUser, 1);
-                            heroForUser.setId(idHero);
-                            heroDAO.updateHero(heroForUser);
+              if(heroForUser != null && (heroForUser.getHp() == 0 & heroForUser.getDamage() == 0)){
+                     idHero = heroForUser.getId();
 
-                     }
-
+                     NewHero newHeroOne = new NewHero();
+                     heroForUser = newHeroOne.getHero(currentUser, hero_type);
+                     heroForUser.setId(idHero);
+                     heroDAO.updateHero(heroForUser);
               }
 
               return heroForUser;

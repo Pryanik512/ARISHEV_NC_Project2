@@ -9,12 +9,16 @@ public class BattleWindow extends Composite {
     Label heroLvlLB = new Label();
     Label heroHpLB = new Label();
     Label heroDmgLB = new Label();
+    Grid battleGround = new Grid(7,9);
 
     HorizontalPanel horizontalPanel = new HorizontalPanel();
+    VerticalPanel groundPanel = new VerticalPanel();
     VerticalPanel panelForUser = new VerticalPanel();
     VerticalPanel panelForHero = new VerticalPanel();
 
     public BattleWindow(EntityForBattle efb){
+
+
 
         userNameLB.setText("Username: " + efb.getUserName());
 
@@ -44,9 +48,11 @@ public class BattleWindow extends Composite {
         horizontalPanel.add(panelForUser);
         horizontalPanel.add(panelForHero);
 
-        RootPanel.get("NewAccPage").add(horizontalPanel);
+        groundPanel.add(battleGround);
+        groundPanel.add(horizontalPanel);
+        RootPanel.get("NewAccPage").add(groundPanel);
 
-        initWidget(horizontalPanel);
+        initWidget(groundPanel);
 
     }
 
