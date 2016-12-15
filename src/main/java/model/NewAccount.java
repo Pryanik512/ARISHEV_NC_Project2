@@ -54,10 +54,13 @@ public class NewAccount {
                 this.createNewHeroRecord(i);
                 heroDAO.createHero(hero, new_user);
             }
+            db_access.closeConnection();
             return new_user;
         }
-        else
+        else{
+            db_access.closeConnection();
             return null;
+        }
     }
 
     private boolean checkUniqName(String name) throws SQLException{

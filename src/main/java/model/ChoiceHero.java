@@ -42,7 +42,7 @@ public class ChoiceHero {
                      heroForUser.setId(idHero);
                      heroDAO.updateHero(heroForUser);
               }
-
+              db_access.closeConnection();
               return heroForUser;
 
        }

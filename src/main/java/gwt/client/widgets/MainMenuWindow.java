@@ -21,11 +21,10 @@ public class MainMenuWindow extends Composite {
 
     public MainMenuWindow(UsersGWT correctUser) {
 
-        user_name.setText("Username: " + correctUser.getName() + " " + correctUser.getId());
+        user_name.setText("Username: " + correctUser.getName());
         menuPanel.add(user_name);
         menuPanel.add(startBattle_btn);
         menuPanel.add(statistics_btn);
-
 
         RootPanel.get("NewAccPage").add(menuPanel);
 
