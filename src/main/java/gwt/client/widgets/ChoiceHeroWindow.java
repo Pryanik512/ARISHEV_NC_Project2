@@ -4,31 +4,33 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.*;
 import gwt.client.GWTEntity.EntityForBattle;
 import gwt.client.GWTEntity.UsersGWT;
 import gwt.client.GameNCException;
 import gwt.client.GameService;
 
 public class ChoiceHeroWindow extends Composite{
-
+    Label info_lb = new Label("Choose a hero");
     Button warrBtn = new Button("Warrior");
     Button barbBtn = new Button("Barbarian");
     Button asBtn = new Button("Assassin");
+    VerticalPanel mainPanel = new VerticalPanel();
     HorizontalPanel choicePanel = new HorizontalPanel();
 
     public ChoiceHeroWindow(UsersGWT usersGWT){
+
+        mainPanel.add(info_lb);
 
         choicePanel.add(warrBtn);
         choicePanel.add(barbBtn);
         choicePanel.add(asBtn);
 
-        RootPanel.get("NewAccPage").add(choicePanel);
+        mainPanel.add(choicePanel);
 
-        initWidget(choicePanel);
+        RootPanel.get("NewAccPage").add(mainPanel);
+
+        initWidget(mainPanel);
 
         warrBtn.addClickHandler(new ClickHandler() {
             @Override

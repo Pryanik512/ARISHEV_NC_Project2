@@ -29,10 +29,12 @@ public class LogIn {
         Users exist_user = userDAO.findUser(user_name);
         if(exist_user != null) {
            if(securityDAO.checkSecurity(exist_user, password)) {
+               db_access.closeConnection();
                return exist_user;
            }
         }
-            return null;
+        db_access.closeConnection();
+        return null;
 
     }
 

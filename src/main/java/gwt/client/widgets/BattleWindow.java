@@ -18,7 +18,12 @@ public class BattleWindow extends Composite {
 
     public BattleWindow(EntityForBattle efb){
 
+        for(int r = 0; r < 7; r++){
+            for(int c = 0; c < 9; c++){
+                battleGround.setWidget(r,c, new Image("images/ground.jpg"));
 
+            }
+        }
 
         userNameLB.setText("Username: " + efb.getUserName());
 
