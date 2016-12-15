@@ -35,21 +35,30 @@
             <version>2.8.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+
+
 
 
     </dependencies>
 
     <build>
-        <finalName>ololosha</finalName><!--ПОМЕНЯТЬ ПОТОМ11111111111111111111111-->
+        <finalName>StepFighting</finalName><!--ПОМЕНЯТЬ ПОТОМ11111111111111111111111-->
         <sourceDirectory>src/main/java</sourceDirectory>
-
+        <outputDirectory>target/WEB-INF/classes</outputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.3</version>
                 <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <!--failOnMissingWebXml>false</failOnMissingWebXml-->
+                    <warSourceDirectory>target</warSourceDirectory>
+                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                     <!--<webXml>web\WEB-INF\web.xml</webXml>-->
                 </configuration>
             </plugin>
@@ -63,8 +72,28 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>2.8.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <runTarget>GameNC.html</runTarget>
+                </configuration>
+            </plugin>
+
+
         </plugins>
     </build>
+
 
 
 </project>
