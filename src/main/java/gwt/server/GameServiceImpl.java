@@ -10,13 +10,14 @@ import gwt.client.GameService;
 import model.ChoiceHero;
 import model.LogIn;
 import model.NewAccount;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
 
 public class GameServiceImpl extends RemoteServiceServlet implements GameService {
-    private static Logger loger = Logger.getLogger(GameServiceImpl.class.getName());
+    private static Logger loger = LoggerFactory.getLogger(GameServiceImpl.class.getName());
     @Override
     public UsersGWT addAccount(String name, String pass) throws GameNCException{
         try {

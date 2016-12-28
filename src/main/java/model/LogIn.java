@@ -4,12 +4,13 @@ import dao.DBFactory;
 import dao.Entity.Users;
 import dao.SecurityDAO;
 import dao.UserDAO;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
 public class LogIn {
-    private static Logger loger = Logger.getLogger(LogIn.class.getName());
+    private static Logger loger = LoggerFactory.getLogger(LogIn.class.getName());
 
     private DBFactory db_access = new DBFactory();
     private UserDAO userDAO;

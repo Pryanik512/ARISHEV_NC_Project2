@@ -3,7 +3,8 @@ package dao.daoImpl;
 import dao.Entity.Users;
 import dao.HeroDAO;
 import dao.Entity.Heroes;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Collection;
 public class HeroDaoImp implements HeroDAO{
     private Connection connection;
 
-    private static Logger loger = Logger.getLogger(HeroDaoImp.class.getName());
+    private static Logger loger = LoggerFactory.getLogger(HeroDaoImp.class.getName());
     public HeroDaoImp(Connection connect) {
         this.connection = connect;
     }

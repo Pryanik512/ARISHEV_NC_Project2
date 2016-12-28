@@ -12,7 +12,7 @@ import gwt.client.GameService;
 
 public class LogInWindow extends Composite {
 
-    private Label header_label = new Label("Log In");
+
     private Label un_label = new Label("Username:");
     private TextBox un_text = new TextBox();
     private Label pass_label = new Label("Password:");
@@ -22,6 +22,7 @@ public class LogInWindow extends Composite {
     private VerticalPanel verticalPanel = new VerticalPanel();
 
     public LogInWindow(){
+        Label header_label = new Label("Log In");
 
         verticalPanel.add(header_label);
         verticalPanel.add(un_label);

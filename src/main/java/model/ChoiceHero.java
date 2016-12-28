@@ -7,12 +7,13 @@ import dao.HeroDAO;
 import dao.UserDAO;
 import model.heroes.NewHero;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
 public class ChoiceHero {
-       private static Logger loger = Logger.getLogger(ChoiceHero.class.getName());
+       private static Logger loger = LoggerFactory.getLogger(ChoiceHero.class.getName());
        private DBFactory db_access = new DBFactory();
        private UserDAO userDAO;
        private HeroDAO heroDAO;
