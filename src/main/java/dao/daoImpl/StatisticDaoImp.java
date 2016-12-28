@@ -4,7 +4,9 @@ package dao.daoImpl;
 import dao.Entity.Users;
 import dao.StatisticDAO;
 import dao.Entity.Statistics;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ public class StatisticDaoImp implements StatisticDAO{
     private Connection connection;
 
 
-    private static Logger loger = Logger.getLogger(HeroDaoImp.class.getName());
+    private static Logger loger = LoggerFactory.getLogger(HeroDaoImp.class.getName());
 
 
     public StatisticDaoImp(Connection connect) {
@@ -24,6 +26,7 @@ public class StatisticDaoImp implements StatisticDAO{
     // DBFactory.connection будет использоваться здесь для создания запросов
     @Override
     public void createStatistic(Statistics statistics, Users user) throws SQLException {
+
         if (connection != null) {
 
             if (userExist(user)) {
@@ -166,36 +169,30 @@ public class StatisticDaoImp implements StatisticDAO{
     }
 
     public boolean userExist(Users user) throws SQLException {
+        Statement statement =null;
+        ResultSet result = null;
+        try {
 
-        Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId());
+            statement = connection.createStatement();
+            result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId());
+            return result.next();
 
-        if(result.next()){
-            result.close();;
-            statement.close();
-            return true;
-        }
-        else{
+        }finally {
             result.close();
             statement.close();
-            return false;
         }
     }
     @Override
     public boolean statisticExist(Statistics statistic) throws SQLException {
-
-        Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery("SELECT id FROM statistics WHERE id = " + statistic.getId());
-
-        if(result.next()){
-            result.close();;
-            statement.close();
-            return true;
-        }
-        else{
+        Statement statement = null;
+        ResultSet result = null;
+        try {
+            statement = connection.createStatement();
+            result = statement.executeQuery("SELECT id FROM statistics WHERE id = " + statistic.getId());
+            return result.next();
+        }finally {
             result.close();
             statement.close();
-            return false;
         }
     }
 

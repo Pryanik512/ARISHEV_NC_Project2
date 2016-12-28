@@ -1,17 +1,14 @@
 package dao;
 import java.sql.*;
-
-
-
 import dao.daoImpl.*;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DBFactory {
 
 
     private static Connection connection = null;
-    private static Logger loger = Logger.getLogger(DBFactory.class.getName());
+    private static Logger loger = LoggerFactory.getLogger(DBFactory.class.getName());
 
 
 

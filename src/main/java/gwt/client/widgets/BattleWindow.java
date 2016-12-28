@@ -11,6 +11,9 @@ public class BattleWindow extends Composite {
     Label heroDmgLB = new Label();
     Grid battleGround = new Grid(7,9);
 
+    String groundImg = new String("images/ground.jpg");
+    Image leftHero;
+
     HorizontalPanel horizontalPanel = new HorizontalPanel();
     VerticalPanel groundPanel = new VerticalPanel();
     VerticalPanel panelForUser = new VerticalPanel();
@@ -18,18 +21,31 @@ public class BattleWindow extends Composite {
 
     public BattleWindow(EntityForBattle efb){
 
+
+        battleGround.addStyleName("panel grid");
+
         for(int r = 0; r < 7; r++){
             for(int c = 0; c < 9; c++){
-                battleGround.setWidget(r,c, new Image("images/ground.jpg"));
+                battleGround.setWidget(r,c, new Label("#"));
 
             }
         }
 
+        for(int r = 0; r < 7; r++){
+            for(int c = 0; c < 9; c++){
+                battleGround.getCellFormatter().setStyleName(r,c,"cellStyle");
+            }
+        }
+
+
+
         userNameLB.setText("Username: " + efb.getUserName());
+
 
         switch (efb.getHeroType()){
             case 1:
                 heroTypeLB.setText("Hero type: Warrior");
+                leftHero = new Image("images/Warrior.jpg");
                 break;
             case 2:
                 heroTypeLB.setText("Hero type: Barbarian");
@@ -60,5 +76,7 @@ public class BattleWindow extends Composite {
         initWidget(groundPanel);
 
     }
+
+
 
 }

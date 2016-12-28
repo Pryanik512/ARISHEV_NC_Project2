@@ -5,12 +5,13 @@ import dao.Entity.Heroes;
 import dao.Entity.Statistics;
 import dao.Entity.Users;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
 public class NewAccount {
-    private static Logger loger = Logger.getLogger(NewAccount.class.getName());
+    private static Logger loger = LoggerFactory.getLogger(NewAccount.class.getName());
     private DBFactory db_access = new DBFactory();
     private UserDAO userDAO;
     private SecurityDAO securityDAO;
