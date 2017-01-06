@@ -34,7 +34,7 @@ public class GameServiceImpl extends RemoteServiceServlet implements GameService
 
         }catch (SQLException ex){
             loger.error("Problem with Data Base: " + ex);
-            throw new GameNCException("Problem with Data Base!");
+            throw new GameNCException("Problem with Data Base!" + ex.getMessage());
         }
 
     }
@@ -55,7 +55,7 @@ public class GameServiceImpl extends RemoteServiceServlet implements GameService
 
         }catch (SQLException ex){
             loger.error("Problem with Data Base: " + ex);
-            throw new GameNCException("Problem with Data Base!");
+            throw new GameNCException("Problem with Data Base!" + ex.getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public class GameServiceImpl extends RemoteServiceServlet implements GameService
 
         }catch(SQLException ex){
             loger.error("Problem with Data Base: " + ex);
-            throw new GameNCException("Problem with Data Base!");
+            throw new GameNCException("Problem with Data Base!" + ex.getMessage());
         }
     }
 }

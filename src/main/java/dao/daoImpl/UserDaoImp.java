@@ -22,19 +22,17 @@ public class UserDaoImp implements UserDAO {
 
     @Override
     public void createUser(Users user) throws  SQLException
-    {   Statement statement = null;
-        try {
+    {
+        try (Statement statement = connection.createStatement()){
             if (connection != null) {
-                statement = connection.createStatement();
                 statement.executeUpdate("INSERT INTO users(name) values('" + user.getName() + "')");
-
                 loger.info("User " + user.getName() + " created successfully");
             } else {
-
                 throw new RuntimeException("First, create a connection!");
             }
-        }finally {
-            statement.close();
+        }catch(SQLException e) {
+            throw e;
+
         }
 
     }
@@ -42,25 +40,23 @@ public class UserDaoImp implements UserDAO {
     @Override
     public void deleteUser(Users user) throws SQLException
     {
-        Statement statement = null;
-        try {
+        try (Statement statement = connection.createStatement() ) {
 
             if (connection != null) {
 
                 if (userExist(user)) {
-                    statement = connection.createStatement();
                     statement.executeUpdate("DELETE FROM users WHERE id = " + user.getId());
 
                     loger.info("User " + user.getName() + " deleted successfully");
                 } else {
-                    throw new RuntimeException("User does not exist");
+                    loger.info("User " + user.getName() + " does not exist");
 
                 }
             } else {
                 throw new RuntimeException("First, create a connection!");
             }
-        }finally {
-            statement.close();
+        }catch(SQLException e) {
+            throw e;
         }
 
     }
@@ -68,75 +64,69 @@ public class UserDaoImp implements UserDAO {
     @Override
     public Users findUser(String name) throws SQLException
     {
-        PreparedStatement statement = null;
-        ResultSet result = null;
 
-        try {
-
+        try(PreparedStatement statement = findUserPrepStatement(name);
+            ResultSet result = statement.executeQuery()) {
             if (connection != null) {
                 Users user = new Users();
 
-                statement = connection.prepareStatement("SELECT * FROM users WHERE name = ?");
-                statement.setString(1, name);
-                result = statement.executeQuery();
-
                 if (result.next()) {
-
                     user.setId(result.getInt("id"));
                     user.setName(result.getString("name"));
-
-
                     loger.info("User " + user.getName() + " successfully found");
                 } else {
                     user = null;
                 }
-
                 return user;
             } else {
                 throw new RuntimeException("First, create a connection!");
             }
-        }finally {
-            result.close();
-            statement.close();
+        }catch (SQLException e){
+            throw e;
         }
+    }
+
+    private PreparedStatement findUserPrepStatement(String name) throws SQLException{
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE name = ?");
+        statement.setString(1, name);
+        return  statement;
     }
 
     @Override
     public void updateUser(Users user) throws SQLException
     {
-        PreparedStatement upStatement = null;
-        try {
             if (connection != null) {
-
-                if (userExist(user)) {
-                    upStatement = connection.prepareStatement("UPDATE users SET name = ? WHERE id = ?");
-                    upStatement.setString(1, user.getName());
-                    upStatement.setInt(2, user.getId());
-                    upStatement.executeUpdate();
-
-
-                    loger.info("User " + user.getName() + " updated successfully");
-                } else {
-                    throw new RuntimeException("User does not exist!");
+                try (PreparedStatement upStatement = updateUserPrepStatement(user)){
+                    if (userExist(user)) {
+                        upStatement.executeUpdate();
+                        loger.info("User " + user.getName() + " updated successfully");
+                    } else {
+                        throw new SQLException("User does not exist!");
+                    }
+                }catch (SQLException e){
+                    throw e;
                 }
             } else {
                 throw new RuntimeException("First, create a connection!");
             }
-        }finally {
-            upStatement.close();
-        }
+
+    }
+
+    private PreparedStatement updateUserPrepStatement(Users user) throws SQLException{
+        PreparedStatement upStatement = connection.prepareStatement("UPDATE users SET name = ? WHERE id = ?");
+        upStatement.setString(1, user.getName());
+        upStatement.setInt(2, user.getId());
+        return upStatement;
     }
 
     @Override
     public Collection<Users> selectAllUser() throws SQLException
     {
-        Statement statement = null;
-        ResultSet result = null;
-        try {
+
+        try(Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery("SELECT * FROM users ORDER BY id")) {
             if (connection != null) {
                 ArrayList<Users> allUsers = new ArrayList<>();
-                statement = connection.createStatement();
-                result = statement.executeQuery("SELECT * FROM users ORDER BY id");
 
                 while (result.next()) {
                     if (!result.wasNull()) {
@@ -146,31 +136,27 @@ public class UserDaoImp implements UserDAO {
 
                         allUsers.add(_user);
                     } else {
-                        throw new RuntimeException("Users does not exist!");
+                        throw new SQLException("Users does not exist!");
                     }
                 }
                 return allUsers;
             } else {
                 throw new RuntimeException("First, create a connection!");
             }
-        }finally {
-            result.close();
-            statement.close();
+        }catch (SQLException e){
+            throw e;
         }
     }
 
     @Override
     public boolean userExist(Users user) throws SQLException {
-        Statement statement = null;
-        ResultSet result = null;
-        try {
-            statement = connection.createStatement();
-            result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId());
+
+        try(Statement statement = connection.createStatement();
+            ResultSet result =  statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId())) {
 
             return result.next();
-        }finally {
-            statement.close();
-            result.close();
+        }catch (SQLException e){
+            throw e;
         }
     }
 }

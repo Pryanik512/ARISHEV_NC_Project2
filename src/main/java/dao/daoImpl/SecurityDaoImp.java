@@ -22,20 +22,19 @@ public class SecurityDaoImp implements SecurityDAO {
     public void createSecurity(Users user, String password) throws SQLException {
 
         if (connection != null) {
+            try( Statement statement = connection.createStatement()) {
+                if (userExist(user)) {
 
-            if (userExist(user)) {
-                Statement statement = connection.createStatement();
-                String encoded = Base64                             // Encoding password through base-64
-                        .getEncoder()
-                        .encodeToString( password.getBytes( StandardCharsets.UTF_8 ) );
-                statement.executeUpdate("INSERT INTO security(user_id,password) values(" + user.getId() + ", '" + encoded + "')");
-                statement.close();
+                    String encoded = Base64                             // Encoding password through base-64
+                            .getEncoder()
+                            .encodeToString(password.getBytes(StandardCharsets.UTF_8));
+                    statement.executeUpdate("INSERT INTO security(user_id,password) values(" + user.getId() + ", '" + encoded + "')");
+
+                } else
+                    throw new SQLException("User does not exist");
+            }catch(SQLException e){
+                throw e;
             }
-            else
-                throw new RuntimeException("User does not exist");
-
-
-
         } else {
             throw new RuntimeException("First, create a connection!");
         }
@@ -45,18 +44,15 @@ public class SecurityDaoImp implements SecurityDAO {
     public void deleteSecurity(Users user) throws SQLException {
 
         if (connection != null) {
+            try (Statement statement = connection.createStatement();){
+                if (userExist(user)) {
+                    statement.executeUpdate("DELETE FROM security WHERE user_id = " + user.getId());
 
-
-            if (userExist(user)) {
-                Statement statement = connection.createStatement();
-                statement.executeUpdate("DELETE FROM security WHERE user_id = " + user.getId());
-                System.out.println("DELETE OK!!");
-
-                statement.close();
+                } else
+                    throw new SQLException("User does not exist");
+            }catch(SQLException e){
+                throw e;
             }
-            else
-                throw new RuntimeException("User does not exist");
-
         } else {
             throw new RuntimeException("First, create a connection!");
         }
@@ -67,58 +63,46 @@ public class SecurityDaoImp implements SecurityDAO {
 
         if (connection != null) {
 
+            try(PreparedStatement p_Statement = checkSecurityPrepStatement(user);
+                ResultSet resultSecurity = p_Statement.executeQuery()) {
+                if (userExist(user)) {
 
-            if (userExist(user)) {
-                Statement statement = connection.createStatement();
-                PreparedStatement p_Statement = connection.prepareStatement("SELECT password FROM security WHERE user_id = ?");
-                p_Statement.setInt(1,user.getId());
+                    resultSecurity.next();
+                    String passInDB = resultSecurity.getString("password");
 
-                ResultSet resultSecurity = p_Statement.executeQuery();
-                resultSecurity.next();
-                String passInDB = resultSecurity.getString("password");
+                    String decodedPass = new String(                    // Decoding password from base-64
+                            Base64.getDecoder().decode(passInDB),
+                            StandardCharsets.UTF_8);
 
-                String decodedPass = new String(                    // Decoding password from base-64
-                        Base64.getDecoder().decode( passInDB ),
-                        StandardCharsets.UTF_8 );
+                    return password.compareTo(decodedPass) == 0;
 
-
-                if(password.compareTo(decodedPass) == 0) {
-                    resultSecurity.close();
-                    statement.close();
-                    return true;
-                }
-                else {
-
-                    resultSecurity.close();
-                    statement.close();
-                    return false;
-                }
-
+                } else
+                    throw new SQLException("User does not exist");
+            }catch(SQLException e){
+                throw e;
             }
-            else
-                throw new RuntimeException("User does not exist");
-
         } else {
             throw new RuntimeException("First, create a connection!");
         }
 
     }
 
+    private PreparedStatement checkSecurityPrepStatement(Users user) throws SQLException{
+        PreparedStatement p_Statement = connection.prepareStatement("SELECT password FROM security WHERE user_id = ?");
+        p_Statement.setInt(1,user.getId());
+        return p_Statement;
+    }
+
     @Override
     public boolean userExist(Users user) throws SQLException {
 
-        Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId());
+        try ( Statement statement = connection.createStatement();
+              ResultSet result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId())){
 
-        if(result.next()){
-            result.close();;
-            statement.close();
-            return true;
-        }
-        else{
-            result.close();
-            statement.close();
-            return false;
+            return result.next();
+
+        }catch (SQLException e){
+            throw e;
         }
     }
 

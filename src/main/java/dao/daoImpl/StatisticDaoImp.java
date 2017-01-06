@@ -16,7 +16,7 @@ public class StatisticDaoImp implements StatisticDAO{
     private Connection connection;
 
 
-    private static Logger loger = LoggerFactory.getLogger(HeroDaoImp.class.getName());
+    private static Logger loger = LoggerFactory.getLogger(StatisticDaoImp.class.getName());
 
 
     public StatisticDaoImp(Connection connect) {
@@ -28,27 +28,22 @@ public class StatisticDaoImp implements StatisticDAO{
     public void createStatistic(Statistics statistics, Users user) throws SQLException {
 
         if (connection != null) {
-
-            if (userExist(user)) {
-                Statement statement = connection.createStatement();
-
-                statement.executeUpdate("INSERT INTO statistics(user_id," +
-                                                               "user_level," +
-                                                               "win," +
-                                                               "defeat) values(" +
-                                                               user.getId() + "," +
-                                                               statistics.getUser_level() + "," +
-                                                               statistics.getWin() + "," +
-                                                               statistics.getDefeat() + ")");
-
-                statement.close();
-                loger.info("Statistic for " + user.getName() + " created successfully");
+            try(Statement statement = connection.createStatement()){
+                if (userExist(user)) {
+                    statement.executeUpdate("INSERT INTO statistics(user_id," +
+                            "user_level," +
+                            "win," +
+                            "defeat) values(" +
+                            user.getId() + "," +
+                            statistics.getUser_level() + "," +
+                            statistics.getWin() + "," +
+                            statistics.getDefeat() + ")");
+                    loger.info("Statistic for " + user.getName() + " created successfully");
+                } else
+                    throw new SQLException("User does not exist");
+            }catch (SQLException e){
+                throw e;
             }
-            else
-                throw new RuntimeException("User does not exist");
-
-
-
         } else {
             throw new RuntimeException("First, create a connection!");
         }
@@ -58,17 +53,15 @@ public class StatisticDaoImp implements StatisticDAO{
     @Override
     public void deleteStatistic(Statistics statistic) throws SQLException{
         if (connection != null) {
-
-            if (statisticExist(statistic)){
-                Statement statement = connection.createStatement();
-                statement.executeUpdate("DELETE FROM statistics WHERE id = " + statistic.getId());
-                statement.close();
-                loger.info("Statistic for" + statistic.getUser_id() + " deleted successfully");
-            }
-
-            else{
-                throw new RuntimeException("Statistic does not exist");
-
+            try (Statement statement = connection.createStatement();){
+                if (statisticExist(statistic)) {
+                    statement.executeUpdate("DELETE FROM statistics WHERE id = " + statistic.getId());
+                    loger.info("Statistic for" + statistic.getUser_id() + " deleted successfully");
+                } else {
+                    throw new SQLException("Statistic does not exist");
+                }
+            }catch(SQLException e){
+                throw e;
             }
         } else {
             throw new RuntimeException("First, create a connection!");
@@ -82,24 +75,21 @@ public class StatisticDaoImp implements StatisticDAO{
         if (connection != null) {
             Statistics statistics = new Statistics();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM statistics WHERE user_id = (SELECT id FROM users WHERE name = ?)");
-            statement.setString(1,user_name);
-            ResultSet result = statement.executeQuery();
+            try (PreparedStatement statement = findStatisticsPrepStatement(user_name);
+                 ResultSet result = statement.executeQuery()){
+                if (result.next()) {
+                    statistics.setId(result.getInt("id"));
+                    statistics.setUser_id(result.getInt("user_id"));
+                    statistics.setWin(result.getInt("win"));
+                    statistics.setDefeat(result.getInt("defeat"));
+                    statistics.setUser_level(result.getInt("user_level"));
 
-
-            if (result.next()) {
-
-                statistics.setId(result.getInt("id"));
-                statistics.setUser_id(result.getInt("user_id"));
-                statistics.setWin(result.getInt("win"));
-                statistics.setDefeat(result.getInt("defeat"));
-                statistics.setUser_level(result.getInt("user_level"));
-
-                loger.info("Hero for " +user_name + "successfully found");
-            } else {
-                result.close();
-                statement.close();
-                throw new RuntimeException("Statistic for that user does not exist!");
+                    loger.info("Hero for " + user_name + "successfully found");
+                } else {
+                    throw new SQLException("Statistic for that user does not exist!");
+                }
+            }catch (SQLException e){
+                throw e;
             }
 
             return statistics;
@@ -108,28 +98,37 @@ public class StatisticDaoImp implements StatisticDAO{
         }
     }
 
+    private PreparedStatement findStatisticsPrepStatement(String user_name) throws SQLException{
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM statistics WHERE user_id = (SELECT id FROM users WHERE name = ?)");
+        statement.setString(1,user_name);
+        return statement;
+    }
+
     @Override
     public void updateStatistic(Statistics statistics) throws SQLException{
         if (connection != null) {
-
-            if (statisticExist(statistics)) {
-                PreparedStatement upStatement = connection.prepareStatement("UPDATE statistics SET user_id = ?, win = ?, defeat = ?, user_level = ?, WHERE id = ?");
-                upStatement.setInt(1, statistics.getUser_id());
-                upStatement.setInt(2, statistics.getWin());
-                upStatement.setInt(3, statistics.getDefeat());
-                upStatement.setInt(4, statistics.getUser_level());
-
-                upStatement.executeUpdate();
-
-                upStatement.close();
-                loger.info("Statistic " + statistics.getUser_id() + " updated successfully");
-            }
-            else{
-                throw new RuntimeException("Statistic does not exist!");
+            try (PreparedStatement upStatement = updateStatisticPrepStatement(statistics)){
+                if (statisticExist(statistics)) {
+                    upStatement.executeUpdate();
+                    loger.info("Statistic " + statistics.getUser_id() + " updated successfully");
+                } else {
+                    throw new SQLException("Statistic does not exist!");
+                }
+            }catch(SQLException e){
+                throw e;
             }
         } else {
             throw new RuntimeException("First, create a connection!");
         }
+    }
+
+    private PreparedStatement updateStatisticPrepStatement(Statistics statistics) throws SQLException{
+        PreparedStatement upStatement = connection.prepareStatement("UPDATE statistics SET user_id = ?, win = ?, defeat = ?, user_level = ?, WHERE id = ?");
+        upStatement.setInt(1, statistics.getUser_id());
+        upStatement.setInt(2, statistics.getWin());
+        upStatement.setInt(3, statistics.getDefeat());
+        upStatement.setInt(4, statistics.getUser_level());
+        return upStatement;
     }
 
     @Override
@@ -137,30 +136,27 @@ public class StatisticDaoImp implements StatisticDAO{
         if (connection != null) {
 
             ArrayList<Statistics> allStatistics = new ArrayList<>();
-            Statement statement = connection.createStatement();
 
-            ResultSet result = statement.executeQuery("SELECT * FROM statistics ORDER BY id");
+            try( Statement statement = connection.createStatement();
+                 ResultSet result = statement.executeQuery("SELECT * FROM statistics ORDER BY id");){
+                while (result.next()) {
+                    if (!result.wasNull()) {
+                        Statistics _stat = new Statistics();
+                        _stat.setId(result.getInt("id"));
+                        _stat.setUser_id(result.getInt("user_id"));
+                        _stat.setWin(result.getInt("win"));
+                        _stat.setDefeat(result.getInt("defeat"));
+                        _stat.setUser_level(result.getInt("user_level"));
 
+                        allStatistics.add(_stat);
 
-            while (result.next()) {
-                if (!result.wasNull()) {
-                    Statistics _stat = new Statistics();
-                    _stat.setId(result.getInt("id"));
-                    _stat.setUser_id(result.getInt("user_id"));
-                    _stat.setWin(result.getInt("win"));
-                    _stat.setDefeat(result.getInt("defeat"));
-                    _stat.setUser_level(result.getInt("user_level"));
-
-                    allStatistics.add(_stat);
-                    result.close();
-                    statement.close();
-                    loger.info("Statistic gotten successfully");
+                        loger.info("Statistic gotten successfully");
+                    } else {
+                        throw new RuntimeException("Statistics does not exist!");
+                    }
                 }
-                else {
-                    result.close();
-                    statement.close();
-                    throw new RuntimeException("Statistics does not exist!");
-                }
+            }catch(SQLException e){
+                throw e;
             }
             return allStatistics;
         } else {
@@ -169,30 +165,26 @@ public class StatisticDaoImp implements StatisticDAO{
     }
 
     public boolean userExist(Users user) throws SQLException {
-        Statement statement =null;
-        ResultSet result = null;
-        try {
 
-            statement = connection.createStatement();
-            result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId());
+        try (Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery("SELECT id FROM users WHERE id = " + user.getId())){
+
             return result.next();
 
-        }finally {
-            result.close();
-            statement.close();
+        }catch (SQLException e){
+               throw e;
         }
     }
     @Override
     public boolean statisticExist(Statistics statistic) throws SQLException {
-        Statement statement = null;
-        ResultSet result = null;
-        try {
-            statement = connection.createStatement();
-            result = statement.executeQuery("SELECT id FROM statistics WHERE id = " + statistic.getId());
+
+        try( Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery("SELECT id FROM statistics WHERE id = " + statistic.getId());) {
+
             return result.next();
-        }finally {
-            result.close();
-            statement.close();
+
+        }catch(SQLException e){
+            throw e;
         }
     }
 

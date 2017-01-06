@@ -21,7 +21,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <appserver.home>http://localhost:8080/</appserver.home>
+                <appserver.home>http://localhost:8080/manager/text</appserver.home>
                 <appserver.context>/StepFighting/GameNC.html</appserver.context>
                 <appserver.id>tomcat-local</appserver.id>
             </properties>
