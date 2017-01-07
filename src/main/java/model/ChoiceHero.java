@@ -32,19 +32,22 @@ public class ChoiceHero {
 
               int idHero;
 
+              try {
+                     heroForUser = heroDAO.findHero(currentUser.getName(), hero_type);
 
-              heroForUser = heroDAO.findHero(currentUser.getName(), hero_type);
+                     if (heroForUser != null && (heroForUser.getHp() == 0 & heroForUser.getDamage() == 0)) {
+                            idHero = heroForUser.getId();
 
-              if(heroForUser != null && (heroForUser.getHp() == 0 & heroForUser.getDamage() == 0)){
-                     idHero = heroForUser.getId();
+                            NewHero newHeroOne = new NewHero();
+                            heroForUser = newHeroOne.getHero(currentUser, hero_type);
+                            heroForUser.setId(idHero);
+                            heroDAO.updateHero(heroForUser);
+                     }
 
-                     NewHero newHeroOne = new NewHero();
-                     heroForUser = newHeroOne.getHero(currentUser, hero_type);
-                     heroForUser.setId(idHero);
-                     heroDAO.updateHero(heroForUser);
+                     return heroForUser;
+              }finally {
+                     db_access.closeConnection();
               }
-              db_access.closeConnection();
-              return heroForUser;
 
        }
 }

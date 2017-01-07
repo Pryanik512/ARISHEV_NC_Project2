@@ -27,15 +27,19 @@ public class LogIn {
     }
 
     public Users makeLogIn(String user_name, String password) throws SQLException{
-        Users exist_user = userDAO.findUser(user_name);
-        if(exist_user != null) {
-           if(securityDAO.checkSecurity(exist_user, password)) {
-               db_access.closeConnection();
-               return exist_user;
-           }
+        try {
+            Users exist_user = userDAO.findUser(user_name);
+            if (exist_user != null) {
+                if (securityDAO.checkSecurity(exist_user, password)) {
+                    db_access.closeConnection();
+                    return exist_user;
+                }
+            }
+
+            return null;
+        }finally {
+            db_access.closeConnection();
         }
-        db_access.closeConnection();
-        return null;
 
     }
 

@@ -35,32 +35,33 @@ public class NewAccount {
     }
 
     public Users add(String user_name, String password) throws SQLException{
+        try {
+            if (this.checkUniqName(user_name)) {
 
-        if(this.checkUniqName(user_name)) {
+                new_user = new Users();
+                statistics = new Statistics();
+                hero = new Heroes();
 
-            new_user = new Users();
-            statistics = new Statistics();
-            hero = new Heroes();
+                new_user.setName(user_name);
+                userDAO.createUser(new_user);
+                new_user = userDAO.findUser(user_name);
+                securityDAO.createSecurity(new_user, password);
 
-            new_user.setName(user_name);
-            userDAO.createUser(new_user);
-            new_user = userDAO.findUser(user_name);
-            securityDAO.createSecurity(new_user,password);
+                this.createNewStatisticRecord();
 
-            this.createNewStatisticRecord();
+                statisticDAO.createStatistic(statistics, new_user);
 
-            statisticDAO.createStatistic(statistics, new_user);
+                for (int i = 1; i <= 3; i++) {
+                    this.createNewHeroRecord(i);
+                    heroDAO.createHero(hero, new_user);
+                }
 
-            for(int i = 1; i <= 3; i++) {
-                this.createNewHeroRecord(i);
-                heroDAO.createHero(hero, new_user);
+                return new_user;
+            } else {
+                return null;
             }
+        }finally {
             db_access.closeConnection();
-            return new_user;
-        }
-        else{
-            db_access.closeConnection();
-            return null;
         }
     }
 

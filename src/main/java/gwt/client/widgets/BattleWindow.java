@@ -1,5 +1,6 @@
 package gwt.client.widgets;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.*;
 import gwt.client.GWTEntity.EntityForBattle;
 
@@ -24,20 +25,13 @@ public class BattleWindow extends Composite {
 
         battleGround.addStyleName("panel grid");
 
-        for(int r = 0; r < 7; r++){
-            for(int c = 0; c < 9; c++){
-                battleGround.setWidget(r,c, new Label("#"));
 
-            }
-        }
 
         for(int r = 0; r < 7; r++){
             for(int c = 0; c < 9; c++){
                 battleGround.getCellFormatter().setStyleName(r,c,"cellStyle");
             }
         }
-
-
 
         userNameLB.setText("Username: " + efb.getUserName());
 
@@ -74,6 +68,8 @@ public class BattleWindow extends Composite {
         RootPanel.get("NewAccPage").add(groundPanel);
 
         initWidget(groundPanel);
+
+
 
     }
 
