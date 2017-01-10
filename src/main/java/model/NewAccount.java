@@ -61,7 +61,8 @@ public class NewAccount {
                 return null;
             }
         }finally {
-            db_access.closeConnection();
+            if(db_access != null)
+                db_access.closeConnection();
         }
     }
 

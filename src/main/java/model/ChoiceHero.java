@@ -46,6 +46,7 @@ public class ChoiceHero {
 
                      return heroForUser;
               }finally {
+                     if(db_access != null)
                      db_access.closeConnection();
               }
 
