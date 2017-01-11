@@ -1,8 +1,13 @@
 package dao;
+import java.io.IOException;
 import java.sql.*;
+
 import dao.daoImpl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class DBFactory {
 
@@ -14,13 +19,20 @@ public class DBFactory {
 
     public Connection getConnection() throws SQLException, ClassNotFoundException
     {
+        try {
+            JDBCConfiguration config = JDBCConfiguration.getInstance();
+            config.applyConfiguration();
 
-
-            Class.forName("org.postgresql.Driver");
+            Class.forName(config.getDriverName());
             loger.info("Driver loaded successfully");
 
-            connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/JavaGameDB", "postgres", "root");
+            connection = DriverManager.getConnection(config.getURL(), config.getLogin(), config.getPassword());
             loger.info("The connection has been successfully installed!");
+
+        }catch(ParserConfigurationException | IOException | SAXException e){
+            loger.error("JDBC configuration file error: " + e.getMessage());
+            throw new RuntimeException("JDBC configuration file error: " + e.getMessage());
+        }
            return connection;
     }
 

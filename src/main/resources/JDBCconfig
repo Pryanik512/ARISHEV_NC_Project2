@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<JDBCconfiguration>
+
+    <driver>org.postgresql.Driver</driver>
+
+    <url>jdbc:postgresql://127.0.0.1:5432/JavaGameDB</url>
+
+    <login>postgres</login>
+
+    <password>root</password>
+
+</JDBCconfiguration>
